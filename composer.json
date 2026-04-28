@@ -1,0 +1,11 @@
+{
+    "name": "arxiv-dis/scientific-archive",
+    "description": "Архиви Корҳои Илмии Донишҷӯён - ДИС ДДТТ",
+    "type": "project",
+    "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*",
+        "ext-pdo_pgsql": "*",
+        "ext-pgsql": "*"
+    }
+}
