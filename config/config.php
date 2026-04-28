@@ -27,6 +27,33 @@ function db(): PDO {
     return $pdo;
 }
 
+// ——— Базаи маълумот ———
+define('DB_HOST', 'localhost');
+define('DB_PORT', '5433');
+define('DB_NAME', 'arxiv_dis');
+define('DB_USER', 'postgres');
+define('DB_PASS', 'root');   // ← паролатонро ин ҷо гузоред
+
+function db(): PDO {
+    static $pdo;
+    if (!$pdo) {
+        try {
+            $pdo = new PDO(
+                "pgsql:host=".DB_HOST.";port=".DB_PORT.";dbname=".DB_NAME,
+                DB_USER, DB_PASS,
+                [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
+            );
+        } catch (PDOException $e) {
+            die('<div style="font-family:sans-serif;padding:40px;background:#fee2e2;color:#991b1b;border-radius:8px;margin:40px auto;max-width:600px">
+                <h2>⚠️ Хатои пайваст ба база</h2>
+                <p style="margin-top:10px">'.$e->getMessage().'</p>
+                <p style="margin-top:10px;font-size:13px">Файли <b>config/config.php</b>-ро кушоед ва DB_PASS-ро танзим кунед</p>
+            </div>');
+        }
+    }
+    return $pdo;
+}
 
 // ——— Ёрдамчиҳо ———
 function url(string $path = ''): string {
