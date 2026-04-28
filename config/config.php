@@ -9,7 +9,7 @@ define('MAX_SIZE',   20 * 1024 * 1024); // 20MB
 // ——— Базаи маълумот (Neon) ———
 
 define('DB_HOST', 'ep-holy-moon-abf98mmg.eu-west-2.aws.neon.tech'); // ← аз Neon
-define('DB_PORT', '543');
+define('DB_PORT', '8080');           // ← аз Neon
 define('DB_NAME', 'neondb');         // ← аз Neon
 define('DB_USER', 'neondb_owner');   // ← аз Neon
 define('DB_PASS', 'npg_j7JhlFuB3Dot');       // ← аз Neon
