@@ -9,19 +9,20 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Отключение всех MPM модулей и включение только prefork
-RUN a2dismod mpm_event || true \
-    && a2dismod mpm_worker || true \
-    && a2dismod mpm_prefork || true \
-    && a2enmod mpm_prefork \
+# Физическое удаление лишних MPM конфигов и оставление только prefork
+RUN rm -f /etc/apache2/mods-enabled/mpm_event.conf \
+    && rm -f /etc/apache2/mods-enabled/mpm_event.load \
+    && rm -f /etc/apache2/mods-enabled/mpm_worker.conf \
+    && rm -f /etc/apache2/mods-enabled/mpm_worker.load \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.conf /etc/apache2/mods-enabled/mpm_prefork.conf \
+    && ln -sf /etc/apache2/mods-available/mpm_prefork.load /etc/apache2/mods-enabled/mpm_prefork.load \
     && a2enmod rewrite
 
 ENV PORT=8080
 
 RUN sed -i "s/Listen 80/Listen \${PORT}/g" /etc/apache2/ports.conf \
-    && sed -i "s/:80/:\${PORT}/g" /etc/apache2/sites-available/000-default.conf
-
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+    && sed -i "s/:80/:\${PORT}/g" /etc/apache2/sites-available/000-default.conf \
+    && echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 WORKDIR /var/www/html
 COPY . /var/www/html/
