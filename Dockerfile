@@ -5,17 +5,14 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
     unzip \
+    && docker-php-ext-install pdo pdo_pgsql pgsql zip \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка PHP расширений для PostgreSQL
-RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
-    && docker-php-ext-install pdo pdo_pgsql pgsql zip
-
-# Проверка что драйвер установлен
-RUN php -m | grep pdo_pgsql
-
-# Включение mod_rewrite
-RUN a2enmod rewrite
+# Отключение лишних MPM модулей и включение нужного
+RUN a2dismod mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork \
+    && a2enmod rewrite
 
 ENV PORT=8080
 
