@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-# Установка системных библиотек
+# Установка системных библиотек и PHP драйвера PostgreSQL
 RUN apt-get update && apt-get install -y \
     libpq-dev \
     libzip-dev \
@@ -9,8 +9,10 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Отключение лишних MPM модулей и включение нужного
-RUN a2dismod mpm_event mpm_worker || true \
+# Отключение всех MPM модулей и включение только prefork
+RUN a2dismod mpm_event || true \
+    && a2dismod mpm_worker || true \
+    && a2dismod mpm_prefork || true \
     && a2enmod mpm_prefork \
     && a2enmod rewrite
 
